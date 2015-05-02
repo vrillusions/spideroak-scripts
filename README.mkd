@@ -1,0 +1,54 @@
+# SpiderOak Scripts
+
+Scripts to make working with [SpiderOak](https://spideroak.com) service easier on headless servers where you don't have access to a gui.
+
+## Requirements
+
+- [SpiderOak](https://spideroak.com) package downloaded and installed on system.  Specifically this was done for SpiderOak Orange (the personal version). They also offer a SpiderOak Blue version for corporations that this should work but is untested.
+- This should work on any *nix based os, including Mac OS X
+
+## Usage
+
+### disable_spideroak_hive.sh
+
+This has actually expanded in to something more than just disabling SpiderOak Hive.  While in forums asking about how to do this I found out there's an undocumented feature that allows you specify configuration options.  It is intended for SpiderOak Blue service where the company wants to enforce certain policies but it will also work with SpiderOak Orange.  See [SpiderOak's documentation](https://spideroak.com/business/blue/docs/remote_prefs.html#macos-x-and-linux-json-preferences) for all the details but this script will create the preference file and add the option to disable SpiderOak Hive on this computer.  A more complete version of this file that has been quite useful and is actually what I have set on my systems:
+
+```javascript
+{
+    "GlobalSyncEnabled": false,
+    "FolderWildcards": "Private,.cache",
+    "Wildcards": "*viminfo,*_history"
+}
+```
+
+- `GlobalSyncEnabled` is the preference to control SpiderOak Hive
+- `FolderWildcards` lists folders that will not get backed up regardless of selections. This config won't backup any of the `~/.cache` folders and also if you make use of the Ubuntu/ecryptfs system that mounts an encrypted filesystem to `~/Private` it will not back that up but it will backup the encrypted versions of the files stored in `~/.Private`.
+- `Wildcards` are files not to backup regardless of backup selection. Here it ignores any `*viminfo` files and `*_history` files like `bash_history`, `mysql_history`
+
+This script was designed around SpiderOak Orange (the original version meant for individuals). If you use SpiderOak Blue you will need to adjust the path manually.  See the [SpiderOak Blue Admin Documentation](https://spideroak.com/business/blue/docs/remote_prefs.html#macos-x-and-linux-json-preferences) for file locations.  For SpiderOak Orange users the correct path is to change references from `SpiderOakBlue` to `SpiderOak`, which is what this script will do.
+
+### run_spideroak.sh
+
+This is the primary script.  It runs under the assumption you're running SpiderOak as root since it has to run as a user that can read any file on the system that needs backed up.  By default SpiderOak never deletes a file that's backed up.  This runs the maintenance commands that clean this up.  It does the following:
+
+- Saves the current backup selection to `/root/spideroak_selection.txt`
+- Run SpiderOak in batch mode
+- Runs `--purge-historical-versions` using default schedule
+    - hourly for last 24 hours
+    - daily for last month
+    - weekly thereafter
+- Purge deleted items after 30 days
+
+### spideroak_cleanup.sh
+
+As is commonly the case on servers you'll have files that are constantly changing and getting backed up and are not important, like cache files.  You can get a list of frequently changing files by running the following command as root
+
+```shell
+SpiderOak --tree-changelog | sed -e "s/^.*u'\(.*\)'$/\1/" | sort | uniq -dc | sort -rn
+```
+
+It will count the number of times a file appears in the changelog.  If it's in here a lot that means it's changing a lot.  You'll need to identify files that don't need to be backed up.  Then modify this script to purge that file or folder from SpiderOak.  It will create an ignore for that file or folder and remove all versions from within SpiderOak but not the actual file on system.
+
+## License
+
+Primary license is the [unlicense](http://unlicense.org/). If where you are located doesn't honor public domain dedications then you may instead license this project under the [MIT license](http://opensource.org/licenses/MIT). Only required to use one of those licenses. See `LICENSE.txt` for actual licenses.
