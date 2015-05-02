@@ -52,3 +52,5 @@ It will count the number of times a file appears in the changelog.  If it's in h
 ## License
 
 Primary license is the [unlicense](http://unlicense.org/). If where you are located doesn't honor public domain dedications then you may instead license this project under the [MIT license](http://opensource.org/licenses/MIT). Only required to use one of those licenses. See `LICENSE.txt` for actual licenses.
+
+SpiderOak, SpiderOak Blue, and SpiderOak Orange are copyright [SpiderOak](https://spideroak.com). I am in no way affiliated with SpiderOak, these scripts have not been verified or are supported by SpiderOak, and no endorsement of these scripts have been given by SpiderOak.
