@@ -1,0 +1,16 @@
+# Mac OS X Scripts
+
+## Usage
+
+### run_maintenance.sh
+
+This operates differently than the linux one.  This will stop a running SpiderOak instance, perform maintenance tasks, and then start up SpiderOak again.  You can disable starting at the end with the `-d` option.  For a full list of options run with `-h`.  Detailed list of what this does.
+
+- Stops SpiderOak app if it is running
+- Saves the current backup selection to `~/.spideroak_selection.txt` (may want to change this to a folder that's backed up)
+- Runs `--purge-historical-versions` using default schedule
+    - hourly for last 24 hours
+    - daily for last month
+    - weekly thereafter
+- Purge deleted items after 90 days
+- Start SpiderOak app
