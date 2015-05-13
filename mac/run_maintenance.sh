@@ -97,7 +97,7 @@ while true; do
         break
     else
         log "Stopping running SpiderOak instance"
-        pkill -HUP SpiderOak || true
+        pkill -TERM SpiderOak || true
         sleep 2
     fi
 done
