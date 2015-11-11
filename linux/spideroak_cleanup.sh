@@ -16,7 +16,17 @@
 set -e
 set -u
 
-spideroak_cmd='/usr/bin/SpiderOak'
+
+# SpiderOak was renamed to SpiderOakONE recently, so need to do all this stuff
+if command -v SpiderOakONE 1>/dev/null; then
+    spideroak_cmd=SpiderOakONE
+elif command -v SpiderOak 1>/dev/null; then
+    spideroak_cmd=SpiderOak
+else
+    echo "SpiderOak is not installed or not in path" >&2
+    exit 101
+fi
+
 
 
 log () {

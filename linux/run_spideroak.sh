@@ -89,15 +89,19 @@ done
 shift $(expr ${OPTIND} - 1)
 
 
-# Make sure SpiderOak is in our path
-if ! command -v SpiderOak 1>/dev/null 2>&1; then
-    echo 'SpiderOak is not installed or not in path' >&2
+# SpiderOak was renamed to SpiderOakONE recently, so need to do all this stuff
+if command -v SpiderOakONE 1>/dev/null; then
+    spideroak_cmd=SpiderOakONE
+elif command -v SpiderOak 1>/dev/null; then
+    spideroak_cmd=SpiderOak
+else
+    echo "SpiderOak is not installed or not in path" >&2
     exit 101
 fi
 
 
 # Check if SpiderOak is already running and cancel if it is
-spideroak_running="$(pgrep SpiderOak &>/dev/null; echo $?)"
+spideroak_running="$(pgrep ${spideroak_cmd} &>/dev/null; echo $?)"
 if [[ "${spideroak_running}" -eq "0" ]]; then
     echo "SpiderOak is already running, not rerunning" >&2
     exit 102
@@ -106,12 +110,12 @@ fi
 
 # Get a list of selections since you can't easily pull this from SpiderOak
 log "Save backup selection to file"
-SpiderOak --selection >"${selection_file}"
+${spideroak_cmd} --selection >"${selection_file}"
 
 
 # Intentionally overwrites logfile to prevent it from filling disk
 log "Running SpiderOak"
-SpiderOak --verbose --batchmode >"${verbose_logfile}"
+${spideroak_cmd} --verbose --batchmode >"${verbose_logfile}"
 
 
 # Does default schedule:
@@ -119,12 +123,12 @@ SpiderOak --verbose --batchmode >"${verbose_logfile}"
 #   - daily for last month
 #   - weekly thereafter
 log "Purge historical versions"
-SpiderOak --verbose --purge-historical-versions >>"${verbose_logfile}"
+${spideroak_cmd} --verbose --purge-historical-versions >>"${verbose_logfile}"
 
 
 # Remove items from trash. To keep forever comment or remove line
 log "Purge deleted items"
-SpiderOak --verbose --purge-deleted-items=${purge_days} >>"${verbose_logfile}"
+${spideroak_cmd} --verbose --purge-deleted-items=${purge_days} >>"${verbose_logfile}"
 
 
 log "Finished successfully"

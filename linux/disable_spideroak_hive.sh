@@ -10,10 +10,23 @@
 set -e
 set -u
 
-preference_file=/etc/SpiderOak/Preferences
 
-# Make sure SpiderOak is in path or exit
-which SpiderOak &>/dev/null || exit 2
+# SpiderOak was renamed to SpiderOakONE recently, so need to do all this stuff
+if command -v SpiderOakONE 1>/dev/null; then
+    spideroak_cmd=SpiderOakONE
+    preference_file=/etc/SpiderOakONE/Preferences
+    if [ -f /etc/SpiderOak/Preferences ]; then
+        echo "You are using a newer version of SpiderOakONE but still have a" >&2
+        echo "preference file at /etc/SpiderOak/Preferences.  Verify all" >&2
+        echo "settings have been moved to new location, /etc/SpiderOakONE/Preferences" >&2
+    fi
+elif command -v SpiderOak 1>/dev/null; then
+    spideroak_cmd=SpiderOak
+    preference_file=/etc/SpiderOak/Preferences
+else
+    echo "SpiderOak command not found" >&2
+    exit 2
+fi
 
 # Since this file isn't created automatically if it exists then someone must
 # have had a good reason for it. So just be safe and exit
@@ -47,8 +60,8 @@ spideroak account.
 These commands assume you are root
 
 rm -rf "/root/SpiderOak Hive"
-SpiderOak --purge "/root/SpiderOak Hive"
-SpiderOak --verbose --batchmode
+SpiderOakONE --purge "/root/SpiderOak Hive"
+SpiderOakONE --verbose --batchmode
 _EOF_
 
 exit 0
