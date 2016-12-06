@@ -35,14 +35,14 @@ log () {
 
 spideroak_cleanup_dir() {
     log "Exclude and Purge directory: $1"
-    "${spideroak_cmd}" --exclude-dir=$1 >/dev/null
-    "${spideroak_cmd}" --purge=$1 >/dev/null
+    "${spideroak_cmd}" --exclude-dir="$1" >/dev/null
+    "${spideroak_cmd}" --purge="$1" >/dev/null
 }
 
 spideroak_cleanup_file() {
     log "Exclude and Purge file: $1"
-    "${spideroak_cmd}" --exclude-file=$1 >/dev/null
-    "${spideroak_cmd}" --purge=$1 >/dev/null
+    "${spideroak_cmd}" --exclude-file="$1" >/dev/null
+    "${spideroak_cmd}" --purge="$1" >/dev/null
 }
 
 

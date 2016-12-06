@@ -1,5 +1,7 @@
 # SpiderOak Scripts
 
+[![Build Status](https://travis-ci.org/vrillusions/spideroak-scripts.svg?branch=master)](https://travis-ci.org/vrillusions/spideroak-scripts)
+
 Scripts to make working with [SpiderOak](https://spideroak.com) service easier on headless servers where you don't have access to a gui.
 
 ## Requirements

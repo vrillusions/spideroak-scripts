@@ -14,6 +14,8 @@ readonly script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # where built archives will be
 readonly build_dir="${script_dir}/build"
 
+cd "${script_dir}"
+
 
 # -- Logging functions --
 # Usage: log "What to log"
@@ -66,7 +68,7 @@ for os_name in windows linux mac; do
     _version_os="${version}-${os_name}"
     mkdir "${build_dir}/${_version_os}"
     cd "${script_dir}/${os_name}"
-    cp -X * "${build_dir}/${_version_os}/"
+    cp -X ./* "${build_dir}/${_version_os}/"
     cd "${build_dir}"
     if [[ "${os_name}" == 'windows' ]]; then
         7za a "${_version_os}.zip" -bd -tzip "${_version_os}" >/dev/null

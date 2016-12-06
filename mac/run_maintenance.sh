@@ -36,7 +36,7 @@ purge_days=90
 while getopts ":ha:dp:qs:v:" opt; do
     case ${opt} in
     h)
-        echo "Usage: $(basename $0) [OPTION]"
+        echo "Usage: $(basename "$0") [OPTION]"
         echo 'Run spideroak and maintenance tasks'
         echo
         echo 'Options:'
@@ -77,7 +77,7 @@ while getopts ":ha:dp:qs:v:" opt; do
         ;;
     esac
 done
-shift $(expr ${OPTIND} - 1)
+shift $(( OPTIND - 1 ))
 
 
 spideroak_cmd="${spideroak_app}/Contents/MacOS/SpiderOak"
@@ -116,7 +116,7 @@ log "Purge historical versions"
 
 # Remove items from trash. To keep forever comment or remove line
 log "Purge deleted items"
-"${spideroak_cmd}" --verbose --purge-deleted-items=${purge_days} >>"${verbose_logfile}" 2>&1
+"${spideroak_cmd}" --verbose --purge-deleted-items="${purge_days}" >>"${verbose_logfile}" 2>&1
 
 if [[ "${start_spideroak}" == 'true' ]]; then
     # Start SpiderOak back up

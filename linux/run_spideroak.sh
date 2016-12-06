@@ -53,7 +53,7 @@ purge_days=90
 while getopts ":hp:qs:v:" opt; do
     case ${opt} in
     h)
-        echo "Usage: $(basename $0) [OPTION]"
+        echo "Usage: $(basename "$0") [OPTION]"
         echo 'Run spideroak and maintenance tasks'
         echo
         echo 'Options:'
@@ -86,7 +86,7 @@ while getopts ":hp:qs:v:" opt; do
         ;;
     esac
 done
-shift $(expr ${OPTIND} - 1)
+shift $(( OPTIND - 1 ))
 
 
 # SpiderOak was renamed to SpiderOakONE recently, so need to do all this stuff
@@ -128,7 +128,7 @@ ${spideroak_cmd} --verbose --purge-historical-versions >>"${verbose_logfile}"
 
 # Remove items from trash. To keep forever comment or remove line
 log "Purge deleted items"
-${spideroak_cmd} --verbose --purge-deleted-items=${purge_days} >>"${verbose_logfile}"
+${spideroak_cmd} --verbose --purge-deleted-items="${purge_days}" >>"${verbose_logfile}"
 
 
 log "Finished successfully"
